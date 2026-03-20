@@ -1,44 +1,64 @@
 @import "tailwindcss";
 
-/* ── Design tokens ────────────────────────────────────────── */
+/* ── Design tokens — inspired by dark sales dashboard palette ── */
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  /* Backgrounds */
+  --bg-base:        #0a1628;   /* deepest navy — page background */
+  --bg-surface:     #0d1f3c;   /* panels / cards */
+  --bg-surface-2:   #112447;   /* elevated elements, hover */
+  --bg-overlay:     #1a3560;   /* selected / active items */
 
-  --primary:   #6366f1;
-  --primary-foreground: #ffffff;
+  /* Accent — teal/cyan */
+  --accent:         #00b4d8;
+  --accent-bright:  #00e5ff;
+  --accent-muted:   #0096b4;
+  --accent-glow:    rgba(0, 180, 216, 0.20);
 
-  --card:      #ffffff;
-  --card-border: #e2e8f0;
+  /* Text */
+  --text-primary:   #e8f0fe;
+  --text-secondary: #8eafd4;
+  --text-muted:     #4d6d9a;
 
-  --muted:     #64748b;
-  --success:   #22c55e;
-  --warning:   #f59e0b;
-  --danger:    #ef4444;
+  /* Borders */
+  --border:         #1e3a5f;
+  --border-accent:  #00b4d8;
+
+  /* Status */
+  --success:        #22c55e;
+  --warning:        #f59e0b;
+  --danger:         #ef4444;
+
+  /* Chart palette (Recharts) */
+  --chart-1: #00b4d8;
+  --chart-2: #0077b6;
+  --chart-3: #48cae4;
+  --chart-4: #90e0ef;
+  --chart-5: #caf0f8;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f172a;
-    --foreground: #f1f5f9;
-    --card:       #1e293b;
-    --card-border:#334155;
-    --muted:      #94a3b8;
-  }
-}
-
-/* ── Base reset ───────────────────────────────────────────── */
+/* ── Base reset ─────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+html {
+  color-scheme: dark;
+}
+
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--bg-base);
+  color: var(--text-primary);
   font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100dvh;
 }
+
+/* ── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: var(--bg-base); }
+::-webkit-scrollbar-thumb  { background: var(--bg-overlay); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-muted); }
+
 
