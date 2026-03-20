@@ -40,3 +40,17 @@ export async function getSalesByCategory(
     next(err);
   }
 }
+
+export async function getTopProducts(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const limit = req.query.limit ? Number(req.query.limit) : 5;
+    const data = await salesModel.getTopProducts(limit);
+    res.json({ status: "success", data });
+  } catch (err) {
+    next(err);
+  }
+}
