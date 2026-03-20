@@ -54,3 +54,29 @@ export async function getTopProducts(
     next(err);
   }
 }
+
+export async function getSalesByRegion(
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const data = await salesModel.getSalesByRegion();
+    res.json({ status: "success", data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getProductsList(
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const data = await salesModel.getProductsList();
+    res.json({ status: "success", data });
+  } catch (err) {
+    next(err);
+  }
+}
