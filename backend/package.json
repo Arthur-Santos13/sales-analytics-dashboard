@@ -8,7 +8,9 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "eslint src --ext .ts",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "migrate": "ts-node src/database/migrate.ts",
+    "migrate:seed": "ts-node src/database/migrate.ts --seed"
   },
   "dependencies": {
     "express": "^4.21.2",

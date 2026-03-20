@@ -1,4 +1,4 @@
-import { db } from "../config/database";
+import { query } from "../config/database";
 
 export interface SalesSummary {
   total_revenue: number;
@@ -19,7 +19,7 @@ export interface CategorySale {
 }
 
 export async function getSummary(): Promise<SalesSummary> {
-  const result = await db.query<SalesSummary>(`
+  const result = await query<SalesSummary>(`
     SELECT
       COALESCE(SUM(total_amount), 0)::numeric                 AS total_revenue,
       COUNT(*)::int                                            AS total_orders,
@@ -30,7 +30,7 @@ export async function getSummary(): Promise<SalesSummary> {
 }
 
 export async function getMonthlySales(year: number): Promise<MonthlySale[]> {
-  const result = await db.query<MonthlySale>(
+  const result = await query<MonthlySale>(
     `
     SELECT
       TO_CHAR(created_at, 'Mon') AS month,
@@ -47,7 +47,7 @@ export async function getMonthlySales(year: number): Promise<MonthlySale[]> {
 }
 
 export async function getSalesByCategory(): Promise<CategorySale[]> {
-  const result = await db.query<CategorySale>(`
+  const result = await query<CategorySale>(`
     SELECT
       p.category,
       SUM(oi.quantity * oi.unit_price)::numeric                                  AS revenue,
