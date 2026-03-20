@@ -1,9 +1,11 @@
 import { api } from "./api";
 import type { SalesSummary, MonthlySale, CategorySale, TopProduct, RegionSale, ProductItem, ProductInput } from "@/types/sales";
 
-export async function getSalesSummary(): Promise<SalesSummary> {
+export async function getSalesSummary(year?: number): Promise<SalesSummary> {
+  const params = year ? { year } : {};
   const { data } = await api.get<{ status: string; data: SalesSummary }>(
-    "/sales/summary"
+    "/sales/summary",
+    { params }
   );
   return data.data;
 }
