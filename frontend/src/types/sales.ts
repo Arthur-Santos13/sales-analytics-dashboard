@@ -15,3 +15,10 @@ export interface CategorySale {
   revenue: number;
   percentage: number;
 }
+
+export interface TopProduct {
+  name: string;
+  category: string;
+  units_sold: number;
+  revenue: number;
+}

@@ -18,6 +18,13 @@ export interface CategorySale {
   percentage: number;
 }
 
+export interface TopProduct {
+  name: string;
+  category: string;
+  units_sold: number;
+  revenue: number;
+}
+
 export async function getSummary(): Promise<SalesSummary> {
   const result = await query<SalesSummary>(`
     SELECT
@@ -60,5 +67,24 @@ export async function getSalesByCategory(): Promise<CategorySale[]> {
     GROUP BY p.category
     ORDER BY revenue DESC
   `);
+  return result.rows;
+}
+
+export async function getTopProducts(limit = 5): Promise<TopProduct[]> {
+  const result = await query<TopProduct>(
+    `
+    SELECT
+      p.name,
+      p.category,
+      SUM(oi.quantity)::int              AS units_sold,
+      SUM(oi.quantity * oi.unit_price)::numeric AS revenue
+    FROM order_items oi
+    JOIN products p ON p.id = oi.product_id
+    GROUP BY p.id, p.name, p.category
+    ORDER BY revenue DESC
+    LIMIT $1
+    `,
+    [limit]
+  );
   return result.rows;
 }

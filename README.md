@@ -6,14 +6,14 @@ A full-stack sales analytics dashboard for real-time reporting, built with Next.
 
 ## Tech Stack
 
-| Layer       | Technology                  |
-|-------------|-----------------------------|
-| Frontend    | Next.js 15 + TypeScript     |
-| Styling     | Tailwind CSS                |
-| Charts      | Recharts                    |
-| Backend     | Node.js + Express           |
-| Database    | PostgreSQL 16               |
-| Container   | Docker / Docker Compose     |
+| Layer     | Technology              |
+| --------- | ----------------------- |
+| Frontend  | Next.js 15 + TypeScript |
+| Styling   | Tailwind CSS            |
+| Charts    | Recharts                |
+| Backend   | Node.js + Express       |
+| Database  | PostgreSQL 16           |
+| Container | Docker / Docker Compose |
 
 ---
 
@@ -91,7 +91,7 @@ npm run dev
 ```
 
 | Service  | URL                   |
-|----------|-----------------------|
+| -------- | --------------------- |
 | Frontend | http://localhost:3000 |
 | API      | http://localhost:3001 |
 
@@ -100,7 +100,7 @@ npm run dev
 ## Scripts
 
 | Command         | Description                          |
-|-----------------|--------------------------------------|
+| --------------- | ------------------------------------ |
 | `npm run dev`   | Start frontend + backend in dev mode |
 | `npm run build` | Build both frontend and backend      |
 | `npm run lint`  | Lint all workspaces                  |
