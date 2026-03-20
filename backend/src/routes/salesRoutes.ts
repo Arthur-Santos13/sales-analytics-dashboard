@@ -15,4 +15,10 @@ router.get("/by-category", salesController.getSalesByCategory);
 // GET /api/sales/top-products?limit=5
 router.get("/top-products", salesController.getTopProducts);
 
+// GET /api/sales/by-region
+router.get("/by-region", salesController.getSalesByRegion);
+
+// GET /api/sales/products
+router.get("/products", salesController.getProductsList);
+
 export default router;

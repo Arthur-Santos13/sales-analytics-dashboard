@@ -1,5 +1,5 @@
 import { api } from "./api";
-import type { SalesSummary, MonthlySale, CategorySale, TopProduct } from "@/types/sales";
+import type { SalesSummary, MonthlySale, CategorySale, TopProduct, RegionSale, ProductItem } from "@/types/sales";
 
 export async function getSalesSummary(): Promise<SalesSummary> {
   const { data } = await api.get<{ status: string; data: SalesSummary }>(
@@ -28,6 +28,20 @@ export async function getTopProducts(limit = 5): Promise<TopProduct[]> {
   const { data } = await api.get<{ status: string; data: TopProduct[] }>(
     "/sales/top-products",
     { params: { limit } }
+  );
+  return data.data;
+}
+
+export async function getSalesByRegion(): Promise<RegionSale[]> {
+  const { data } = await api.get<{ status: string; data: RegionSale[] }>(
+    "/sales/by-region"
+  );
+  return data.data;
+}
+
+export async function getProductsList(): Promise<ProductItem[]> {
+  const { data } = await api.get<{ status: string; data: ProductItem[] }>(
+    "/sales/products"
   );
   return data.data;
 }

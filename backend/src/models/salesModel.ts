@@ -25,6 +25,21 @@ export interface TopProduct {
   revenue: number;
 }
 
+export interface RegionSale {
+  region: string;
+  orders: number;
+  revenue: number;
+}
+
+export interface ProductItem {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  units_sold: number;
+  revenue: number;
+}
+
 export async function getSummary(): Promise<SalesSummary> {
   const result = await query<SalesSummary>(`
     SELECT
@@ -86,5 +101,35 @@ export async function getTopProducts(limit = 5): Promise<TopProduct[]> {
     `,
     [limit]
   );
+  return result.rows;
+}
+
+export async function getSalesByRegion(): Promise<RegionSale[]> {
+  const result = await query<RegionSale>(`
+    SELECT
+      region,
+      COUNT(*)::int              AS orders,
+      SUM(total_amount)::numeric AS revenue
+    FROM orders
+    GROUP BY region
+    ORDER BY revenue DESC
+  `);
+  return result.rows;
+}
+
+export async function getProductsList(): Promise<ProductItem[]> {
+  const result = await query<ProductItem>(`
+    SELECT
+      p.id,
+      p.name,
+      p.category,
+      p.price,
+      COALESCE(SUM(oi.quantity)::int, 0)              AS units_sold,
+      COALESCE(SUM(oi.quantity * oi.unit_price), 0)::numeric AS revenue
+    FROM products p
+    LEFT JOIN order_items oi ON oi.product_id = p.id
+    GROUP BY p.id, p.name, p.category, p.price
+    ORDER BY revenue DESC
+  `);
   return result.rows;
 }

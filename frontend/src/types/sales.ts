@@ -22,3 +22,18 @@ export interface TopProduct {
   units_sold: number;
   revenue: number;
 }
+
+export interface RegionSale {
+  region: string;
+  orders: number;
+  revenue: number;
+}
+
+export interface ProductItem {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  units_sold: number;
+  revenue: number;
+}
