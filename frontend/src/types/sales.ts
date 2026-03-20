@@ -34,6 +34,14 @@ export interface ProductItem {
   name: string;
   category: string;
   price: number;
+  quantity: number;
   units_sold: number;
   revenue: number;
+}
+
+export interface ProductInput {
+  name: string;
+  category: string;
+  price: number;
+  quantity: number;
 }

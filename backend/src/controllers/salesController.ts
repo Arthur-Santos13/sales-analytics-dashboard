@@ -80,3 +80,66 @@ export async function getProductsList(
     next(err);
   }
 }
+
+export async function createProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { name, category, price, quantity } = req.body as {
+      name: string; category: string; price: number; quantity: number;
+    };
+    if (!name || !category || price == null || quantity == null) {
+      res.status(400).json({ status: "error", message: "Campos obrigatórios: name, category, price, quantity" });
+      return;
+    }
+    const data = await salesModel.createProduct({ name, category, price: Number(price), quantity: Number(quantity) });
+    res.status(201).json({ status: "success", data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function updateProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { id } = req.params;
+    const { name, category, price, quantity } = req.body as {
+      name: string; category: string; price: number; quantity: number;
+    };
+    if (!name || !category || price == null || quantity == null) {
+      res.status(400).json({ status: "error", message: "Campos obrigatórios: name, category, price, quantity" });
+      return;
+    }
+    const data = await salesModel.updateProduct(id, { name, category, price: Number(price), quantity: Number(quantity) });
+    if (!data) {
+      res.status(404).json({ status: "error", message: "Produto não encontrado" });
+      return;
+    }
+    res.json({ status: "success", data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function deleteProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { id } = req.params;
+    const deleted = await salesModel.deleteProduct(id);
+    if (!deleted) {
+      res.status(404).json({ status: "error", message: "Produto não encontrado" });
+      return;
+    }
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+}

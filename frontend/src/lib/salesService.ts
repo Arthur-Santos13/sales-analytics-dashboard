@@ -1,5 +1,5 @@
 import { api } from "./api";
-import type { SalesSummary, MonthlySale, CategorySale, TopProduct, RegionSale, ProductItem } from "@/types/sales";
+import type { SalesSummary, MonthlySale, CategorySale, TopProduct, RegionSale, ProductItem, ProductInput } from "@/types/sales";
 
 export async function getSalesSummary(): Promise<SalesSummary> {
   const { data } = await api.get<{ status: string; data: SalesSummary }>(
@@ -44,4 +44,24 @@ export async function getProductsList(): Promise<ProductItem[]> {
     "/sales/products"
   );
   return data.data;
+}
+
+export async function createProduct(input: ProductInput): Promise<ProductItem> {
+  const { data } = await api.post<{ status: string; data: ProductItem }>(
+    "/sales/products",
+    input
+  );
+  return data.data;
+}
+
+export async function updateProduct(id: string, input: ProductInput): Promise<ProductItem> {
+  const { data } = await api.put<{ status: string; data: ProductItem }>(
+    `/sales/products/${id}`,
+    input
+  );
+  return data.data;
+}
+
+export async function deleteProduct(id: string): Promise<void> {
+  await api.delete(`/sales/products/${id}`);
 }

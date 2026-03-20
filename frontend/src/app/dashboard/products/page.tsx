@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Package, Search, TrendingUp, DollarSign, Tag } from "lucide-react";
+import { Package, Search, TrendingUp, DollarSign, Tag, Plus, Pencil, Trash2 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
-import { getProductsList } from "@/lib/salesService";
+import { getProductsList, createProduct, updateProduct, deleteProduct } from "@/lib/salesService";
 import { formatCurrency, formatNumber } from "@/lib/format";
-import type { ProductItem } from "@/types/sales";
+import { ProductModal } from "@/components/products/ProductModal";
+import { DeleteConfirmDialog } from "@/components/products/DeleteConfirmDialog";
+import type { ProductItem, ProductInput } from "@/types/sales";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "Eletrônicos":  "var(--chart-1)",
@@ -20,12 +22,55 @@ export default function ProductsPage() {
   const [search, setSearch]     = useState("");
   const [category, setCategory] = useState("");
 
-  useEffect(() => {
-    getProductsList()
+  // Modal state
+  const [modalOpen,   setModalOpen]   = useState(false);
+  const [editProduct, setEditProduct] = useState<ProductItem | null>(null);
+
+  // Delete state
+  const [deleteTarget,  setDeleteTarget]  = useState<ProductItem | null>(null);
+  const [deleting,      setDeleting]      = useState(false);
+
+  function reload() {
+    return getProductsList()
       .then(setProducts)
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, []);
+  }
+
+  useEffect(() => { reload(); }, []);
+
+  async function handleCreate(input: ProductInput) {
+    await createProduct(input);
+    await reload();
+  }
+
+  async function handleUpdate(input: ProductInput) {
+    if (!editProduct) return;
+    await updateProduct(editProduct.id, input);
+    await reload();
+  }
+
+  async function handleDelete() {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      await deleteProduct(deleteTarget.id);
+      await reload();
+      setDeleteTarget(null);
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  function openAdd() {
+    setEditProduct(null);
+    setModalOpen(true);
+  }
+
+  function openEdit(p: ProductItem) {
+    setEditProduct(p);
+    setModalOpen(true);
+  }
 
   const categories = useMemo(
     () => [...new Set(products.map((p) => p.category))].sort(),
@@ -81,26 +126,37 @@ export default function ProductsPage() {
             {categories.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
-        {/* Stats strip */}
-        <div className="ml-auto flex gap-4">
-          <span className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-muted)" }}>
-            <Package size={12} />
-            <span style={{ color: "var(--text-primary)", fontWeight: 600 }}>{filtered.length}</span> produtos
-          </span>
-          <span className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-muted)" }}>
-            <TrendingUp size={12} />
-            <span style={{ color: "var(--accent-bright)", fontWeight: 600 }}>{formatNumber(totalUnitsSold)}</span> un. vendidas
-          </span>
-          <span className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-muted)" }}>
-            <DollarSign size={12} />
-            <span style={{ color: "var(--accent-bright)", fontWeight: 600 }}>{formatCurrency(totalRevenue)}</span>
-          </span>
-        </div>
+
+        {/* Add button */}
+        <button
+          onClick={openAdd}
+          className="ml-auto flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+          style={{ background: "#00b4d8", color: "#fff" }}
+        >
+          <Plus size={15} />
+          Adicionar produto
+        </button>
+      </div>
+
+      {/* Stats strip */}
+      <div className="mt-3 flex flex-wrap gap-4">
+        <span className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-muted)" }}>
+          <Package size={12} />
+          <span style={{ color: "var(--text-primary)", fontWeight: 600 }}>{filtered.length}</span> produtos
+        </span>
+        <span className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-muted)" }}>
+          <TrendingUp size={12} />
+          <span style={{ color: "#00e5ff", fontWeight: 600 }}>{formatNumber(totalUnitsSold)}</span> un. vendidas
+        </span>
+        <span className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-muted)" }}>
+          <DollarSign size={12} />
+          <span style={{ color: "#00e5ff", fontWeight: 600 }}>{formatCurrency(totalRevenue)}</span>
+        </span>
       </div>
 
       {/* ── Table ── */}
       <div
-        className="mt-5 overflow-hidden rounded-xl"
+        className="mt-4 overflow-hidden rounded-xl"
         style={{ border: "1px solid var(--border)" }}
       >
         {/* Table header */}
@@ -109,15 +165,17 @@ export default function ProductsPage() {
           style={{
             background: "var(--bg-surface)",
             color: "var(--text-muted)",
-            gridTemplateColumns: "2.5fr 1fr 1fr 1fr 1fr",
+            gridTemplateColumns: "2.2fr 1fr 0.7fr 0.9fr 0.9fr 1fr 5.5rem",
             borderBottom: "1px solid var(--border)",
           }}
         >
           <span>Produto</span>
           <span>Categoria</span>
+          <span className="text-right">Qtd.</span>
           <span className="text-right">Preço Unit.</span>
           <span className="text-right">Un. Vendidas</span>
           <span className="text-right">Receita</span>
+          <span className="text-center">Ações</span>
         </div>
 
         {/* Rows */}
@@ -139,7 +197,7 @@ export default function ProductsPage() {
               key={p.id}
               className="grid items-center px-5 py-3.5 text-sm transition-colors"
               style={{
-                gridTemplateColumns: "2.5fr 1fr 1fr 1fr 1fr",
+                gridTemplateColumns: "2.2fr 1fr 0.7fr 0.9fr 0.9fr 1fr 5.5rem",
                 background: i % 2 === 0 ? "var(--bg-surface)" : "var(--bg-surface-2)",
                 borderBottom: i < filtered.length - 1 ? "1px solid var(--border)" : "none",
               }}
@@ -160,13 +218,17 @@ export default function ProductsPage() {
                   className="rounded-full px-2.5 py-0.5 text-xs font-medium"
                   style={{
                     background: `${CATEGORY_COLORS[p.category] ?? "var(--accent)"}22`,
-                    color: CATEGORY_COLORS[p.category] ?? "var(--accent-bright)",
+                    color: CATEGORY_COLORS[p.category] ?? "#00e5ff",
                     border: `1px solid ${CATEGORY_COLORS[p.category] ?? "var(--accent)"}44`,
                   }}
                 >
                   {p.category}
                 </span>
               </div>
+              {/* Quantity */}
+              <span className="text-right" style={{ color: p.quantity > 0 ? "var(--text-primary)" : "#ef4444" }}>
+                {formatNumber(p.quantity)}
+              </span>
               {/* Price */}
               <span className="text-right" style={{ color: "var(--text-secondary)" }}>
                 {formatCurrency(Number(p.price))}
@@ -176,13 +238,49 @@ export default function ProductsPage() {
                 {formatNumber(p.units_sold)}
               </span>
               {/* Revenue */}
-              <span className="text-right font-semibold" style={{ color: "var(--accent-bright)" }}>
+              <span className="text-right font-semibold" style={{ color: "#00e5ff" }}>
                 {formatCurrency(Number(p.revenue))}
               </span>
+              {/* Actions */}
+              <div className="flex items-center justify-center gap-1">
+                <button
+                  onClick={() => openEdit(p)}
+                  className="rounded-lg p-1.5 transition-colors hover:bg-[var(--bg-overlay)]"
+                  title="Editar"
+                >
+                  <Pencil size={14} style={{ color: "#00b4d8" }} />
+                </button>
+                <button
+                  onClick={() => setDeleteTarget(p)}
+                  className="rounded-lg p-1.5 transition-colors hover:bg-[#ef444420]"
+                  title="Excluir"
+                >
+                  <Trash2 size={14} style={{ color: "#ef4444" }} />
+                </button>
+              </div>
             </div>
           ))
         )}
       </div>
+
+      {/* Add / Edit modal */}
+      {modalOpen && (
+        <ProductModal
+          product={editProduct}
+          onClose={() => setModalOpen(false)}
+          onConfirm={editProduct ? handleUpdate : handleCreate}
+        />
+      )}
+
+      {/* Delete confirm */}
+      {deleteTarget && (
+        <DeleteConfirmDialog
+          productName={deleteTarget.name}
+          deleting={deleting}
+          onCancel={() => setDeleteTarget(null)}
+          onConfirm={handleDelete}
+        />
+      )}
     </DashboardLayout>
   );
 }

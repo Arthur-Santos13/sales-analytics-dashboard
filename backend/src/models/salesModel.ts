@@ -36,8 +36,16 @@ export interface ProductItem {
   name: string;
   category: string;
   price: number;
+  quantity: number;
   units_sold: number;
   revenue: number;
+}
+
+export interface ProductInput {
+  name: string;
+  category: string;
+  price: number;
+  quantity: number;
 }
 
 export async function getSummary(): Promise<SalesSummary> {
@@ -124,12 +132,39 @@ export async function getProductsList(): Promise<ProductItem[]> {
       p.name,
       p.category,
       p.price,
+      p.quantity,
       COALESCE(SUM(oi.quantity)::int, 0)              AS units_sold,
       COALESCE(SUM(oi.quantity * oi.unit_price), 0)::numeric AS revenue
     FROM products p
     LEFT JOIN order_items oi ON oi.product_id = p.id
-    GROUP BY p.id, p.name, p.category, p.price
+    GROUP BY p.id, p.name, p.category, p.price, p.quantity
     ORDER BY revenue DESC
   `);
   return result.rows;
+}
+
+export async function createProduct(input: ProductInput): Promise<ProductItem> {
+  const result = await query<ProductItem>(
+    `INSERT INTO products (name, category, price, quantity)
+     VALUES ($1, $2, $3, $4)
+     RETURNING id, name, category, price, quantity, 0 AS units_sold, 0 AS revenue`,
+    [input.name, input.category, input.price, input.quantity]
+  );
+  return result.rows[0];
+}
+
+export async function updateProduct(id: string, input: ProductInput): Promise<ProductItem | null> {
+  const result = await query<ProductItem>(
+    `UPDATE products
+     SET name = $1, category = $2, price = $3, quantity = $4, updated_at = NOW()
+     WHERE id = $5
+     RETURNING id, name, category, price, quantity`,
+    [input.name, input.category, input.price, input.quantity, id]
+  );
+  return result.rows[0] ?? null;
+}
+
+export async function deleteProduct(id: string): Promise<boolean> {
+  const result = await query(`DELETE FROM products WHERE id = $1`, [id]);
+  return (result.rowCount ?? 0) > 0;
 }

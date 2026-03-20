@@ -21,4 +21,13 @@ router.get("/by-region", salesController.getSalesByRegion);
 // GET /api/sales/products
 router.get("/products", salesController.getProductsList);
 
+// POST /api/sales/products
+router.post("/products", salesController.createProduct);
+
+// PUT /api/sales/products/:id
+router.put("/products/:id", salesController.updateProduct);
+
+// DELETE /api/sales/products/:id
+router.delete("/products/:id", salesController.deleteProduct);
+
 export default router;
