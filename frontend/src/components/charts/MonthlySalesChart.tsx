@@ -82,9 +82,9 @@ export function MonthlySalesChart({ data, loading }: MonthlySalesChartProps) {
           type="monotone"
           dataKey="revenue"
           name="Receita"
-          stroke="var(--chart-1)"
+          stroke="#00b4d8"
           strokeWidth={2.5}
-          dot={{ r: 4, fill: "var(--chart-1)" }}
+          dot={{ r: 4, fill: "#00b4d8" }}
           activeDot={{ r: 6 }}
         />
         <Line
@@ -92,7 +92,7 @@ export function MonthlySalesChart({ data, loading }: MonthlySalesChartProps) {
           type="monotone"
           dataKey="orders"
           name="Pedidos"
-          stroke="var(--chart-3)"
+          stroke="#48cae4"
           strokeWidth={2}
           strokeDasharray="5 3"
           dot={false}
