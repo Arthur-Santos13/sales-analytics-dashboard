@@ -48,7 +48,19 @@ export interface ProductInput {
   quantity: number;
 }
 
-export async function getSummary(): Promise<SalesSummary> {
+export async function getSummary(year?: number): Promise<SalesSummary> {
+  if (year) {
+    const result = await query<SalesSummary>(
+      `SELECT
+        COALESCE(SUM(total_amount), 0)::numeric AS total_revenue,
+        COUNT(*)::int                            AS total_orders,
+        COALESCE(AVG(total_amount), 0)::numeric  AS average_ticket
+       FROM orders
+       WHERE EXTRACT(YEAR FROM created_at) = $1`,
+      [year]
+    );
+    return result.rows[0];
+  }
   const result = await query<SalesSummary>(`
     SELECT
       COALESCE(SUM(total_amount), 0)::numeric                 AS total_revenue,

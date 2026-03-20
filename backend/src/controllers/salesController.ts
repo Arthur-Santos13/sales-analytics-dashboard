@@ -2,12 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import * as salesModel from "../models/salesModel";
 
 export async function getSalesSummary(
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
   try {
-    const summary = await salesModel.getSummary();
+    const year = req.query.year ? Number(req.query.year) : undefined;
+    const summary = await salesModel.getSummary(year);
     res.json({ status: "success", data: summary });
   } catch (err) {
     next(err);
