@@ -5,96 +5,96 @@ INSERT INTO
 VALUES (
         '22222222-0000-0000-0000-000000000001',
         'Notebook Pro 15',
-        'Electronics',
+        'Eletrônicos',
         4999.90
     ),
     (
         '22222222-0000-0000-0000-000000000002',
-        'Mechanical Keyboard',
-        'Electronics',
+        'Teclado Mecânico',
+        'Eletrônicos',
         349.90
     ),
     (
         '22222222-0000-0000-0000-000000000003',
-        'Wireless Mouse',
-        'Electronics',
+        'Mouse Sem Fio',
+        'Eletrônicos',
         129.90
     ),
     (
         '22222222-0000-0000-0000-000000000004',
-        '4K Monitor 27"',
-        'Electronics',
+        'Monitor 4K 27"',
+        'Eletrônicos',
         2199.00
     ),
     (
         '22222222-0000-0000-0000-000000000005',
-        'Office Chair Ergonomic',
-        'Furniture',
+        'Cadeira Ergonômica',
+        'Móveis',
         1299.00
     ),
     (
         '22222222-0000-0000-0000-000000000006',
-        'Standing Desk',
-        'Furniture',
+        'Mesa Standing Desk',
+        'Móveis',
         2499.00
     ),
     (
         '22222222-0000-0000-0000-000000000007',
-        'Bookshelf Oak',
-        'Furniture',
+        'Estante de Carvalho',
+        'Móveis',
         799.00
     ),
     (
         '22222222-0000-0000-0000-000000000008',
-        'Desk Lamp LED',
-        'Furniture',
+        'Luminária LED de Mesa',
+        'Móveis',
         189.90
     ),
     (
         '22222222-0000-0000-0000-000000000009',
-        'Clean Code (book)',
-        'Books',
+        'Código Limpo',
+        'Livros',
         89.90
     ),
     (
         '22222222-0000-0000-0000-000000000010',
-        'The Pragmatic Programmer',
-        'Books',
+        'O Programador Pragmático',
+        'Livros',
         79.90
     ),
     (
         '22222222-0000-0000-0000-000000000011',
-        'Designing Data-Intensive Apps',
-        'Books',
+        'Aplicações Intensivas em Dados',
+        'Livros',
         99.90
     ),
     (
         '22222222-0000-0000-0000-000000000012',
         'System Design Interview',
-        'Books',
+        'Livros',
         69.90
     ),
     (
         '22222222-0000-0000-0000-000000000013',
         'Whey Protein 1kg',
-        'Health',
+        'Saúde',
         149.90
     ),
     (
         '22222222-0000-0000-0000-000000000014',
-        'Creatine 300g',
-        'Health',
+        'Creatina 300g',
+        'Saúde',
         79.90
     ),
     (
         '22222222-0000-0000-0000-000000000015',
-        'Yoga Mat',
-        'Health',
+        'Tapete de Yoga',
+        'Saúde',
         99.90
     ),
     (
         '22222222-0000-0000-0000-000000000016',
-        'Resistance Bands Set',
-        'Health',
+        'Kit Elásticos de Resistência',
+        'Saúde',
         59.90
     ) ON CONFLICT DO NOTHING;
