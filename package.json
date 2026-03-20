@@ -1,0 +1,24 @@
+{
+  "name": "sales-analytics-dashboard",
+  "version": "1.0.0",
+  "description": "Full-stack sales analytics dashboard with Next.js, Node.js, PostgreSQL and Recharts",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=frontend\" \"npm run dev --workspace=backend\"",
+    "build": "npm run build --workspace=frontend && npm run build --workspace=backend",
+    "lint": "npm run lint --workspace=frontend && npm run lint --workspace=backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "author": "",
+  "license": "MIT"
+}
