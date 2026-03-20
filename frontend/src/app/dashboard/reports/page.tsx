@@ -84,24 +84,43 @@ export default function ReportsPage() {
       </div>
 
       {/* ── KPI Summary strip ── */}
-      {summary && (
-        <div className="mt-5 grid gap-4 sm:grid-cols-3">
-          {[
-            { label: "Receita Total",   value: formatCurrency(summary.total_revenue), color: "var(--accent-bright)" },
-            { label: "Total de Pedidos", value: formatNumber(summary.total_orders),   color: "var(--chart-3)" },
-            { label: "Ticket Médio",    value: formatCurrency(summary.average_ticket), color: "var(--chart-4)" },
+      <div className="mt-5 grid gap-4 sm:grid-cols-3">
+        {loading || !summary ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="animate-pulse rounded-xl px-5 py-4"
+              style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", height: 80 }}
+            />
+          ))
+        ) : (
+          [
+            { label: "Receita Total",    value: formatCurrency(summary.total_revenue),  color: "#00e5ff" },
+            { label: "Total de Pedidos", value: formatNumber(summary.total_orders),      color: "#48cae4" },
+            { label: "Ticket Médio",     value: formatCurrency(summary.average_ticket),  color: "#90e0ef" },
           ].map(({ label, value, color }) => (
             <div
               key={label}
               className="rounded-xl px-5 py-4"
               style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
             >
-              <p className="text-xs uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>{label}</p>
-              <p className="mt-1 text-2xl font-bold" style={{ color }}>{value}</p>
+              <p
+                className="mb-1 text-xs font-semibold uppercase tracking-wider"
+                style={{ color: "var(--text-muted)" }}
+              >
+                {label}
+              </p>
+              <p
+                className="truncate text-xl font-bold leading-tight"
+                style={{ color }}
+                title={value}
+              >
+                {value}
+              </p>
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
 
       {/* ── Charts 2×2 ── */}
       <div className="mt-5 grid gap-6 xl:grid-cols-2">
