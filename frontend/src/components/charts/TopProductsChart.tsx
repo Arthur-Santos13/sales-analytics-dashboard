@@ -18,13 +18,8 @@ interface TopProductsChartProps {
   loading?: boolean;
 }
 
-const CHART_COLORS = [
-  "var(--chart-1)",
-  "var(--chart-2)",
-  "var(--chart-3)",
-  "var(--chart-4)",
-  "var(--chart-5)",
-];
+// Hex values — SVG fill/stroke does not resolve CSS variables
+const CHART_COLORS = ["#00b4d8", "#0077b6", "#48cae4", "#90e0ef", "#caf0f8"];
 
 function CustomTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null;
@@ -40,8 +35,8 @@ function CustomTooltip({ active, payload }: any) {
     >
       <p className="mb-1 font-semibold">{d.name}</p>
       <p style={{ color: "var(--text-secondary)" }}>Categoria: {d.category}</p>
-      <p style={{ color: "var(--chart-1)" }}>Receita: {formatCurrency(d.revenue)}</p>
-      <p style={{ color: "var(--chart-3)" }}>Unidades: {d.units_sold}</p>
+      <p style={{ color: "#00b4d8" }}>Receita: {formatCurrency(d.revenue)}</p>
+      <p style={{ color: "#48cae4" }}>Unidades: {d.units_sold}</p>
     </div>
   );
 }
