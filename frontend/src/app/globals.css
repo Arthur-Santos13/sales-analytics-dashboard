@@ -61,4 +61,32 @@ body {
 ::-webkit-scrollbar-thumb  { background: var(--bg-overlay); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-muted); }
 
+/* ── Print ───────────────────────────────────────────────────── */
+@page {
+  margin: 0;
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide sidebar only */
+  aside {
+    display: none !important;
+  }
+
+  /* Hide header right controls (search, bell, user) */
+  .print-hide {
+    display: none !important;
+  }
+
+  /* Full-width layout with padding (browser margins removed via @page) */
+  main {
+    width: 100% !important;
+    padding: 24px !important;
+  }
+}
+
 

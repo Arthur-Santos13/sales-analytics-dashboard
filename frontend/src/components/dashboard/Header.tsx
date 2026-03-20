@@ -31,8 +31,8 @@ export function Header({ title, subtitle }: HeaderProps) {
         )}
       </div>
 
-      {/* Right controls */}
-      <div className="flex items-center gap-3">
+      {/* Right controls — hidden in print */}
+      <div className="print-hide flex items-center gap-3">
         {/* Search */}
         <div
           className="flex items-center gap-2 rounded-lg px-3 py-2"

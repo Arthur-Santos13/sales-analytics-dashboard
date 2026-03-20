@@ -40,7 +40,7 @@ export function Sidebar() {
       >
         <div
           className="flex h-8 w-8 items-center justify-center rounded-lg"
-          style={{ background: "var(--accent)", boxShadow: "0 0 12px var(--accent-glow)" }}
+          style={{ background: "#00b4d8", boxShadow: "0 0 12px rgba(0,180,216,0.25)" }}
         >
           <BarChart2 size={16} color="#fff" />
         </div>
@@ -54,13 +54,6 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
-        <p
-          className="mb-2 px-2 text-xs font-semibold uppercase tracking-widest"
-          style={{ color: "var(--text-muted)" }}
-        >
-          Menu
-        </p>
-
         {navItems.map(({ label, href, icon: Icon }) => {
           const isActive = pathname === href || pathname.startsWith(href + "/");
           return (

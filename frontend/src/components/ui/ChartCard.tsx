@@ -9,7 +9,7 @@ interface ChartCardProps {
 export function ChartCard({ title, subtitle, action, children, className }: ChartCardProps) {
   return (
     <div
-      className={`rounded-xl ${className ?? ""}`}
+      className={`rounded-xl break-inside-avoid ${className ?? ""}`}
       style={{
         background: "var(--bg-surface)",
         border: "1px solid var(--border)",

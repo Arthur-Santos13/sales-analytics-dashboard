@@ -111,9 +111,8 @@ export default function ReportsPage() {
                 {label}
               </p>
               <p
-                className="truncate text-xl font-bold leading-tight"
+                className="text-base font-bold leading-tight break-all"
                 style={{ color }}
-                title={value}
               >
                 {value}
               </p>
@@ -123,7 +122,7 @@ export default function ReportsPage() {
       </div>
 
       {/* ── Charts 2×2 ── */}
-      <div className="mt-5 grid gap-6 xl:grid-cols-2">
+      <div className="mt-5 grid gap-6 xl:grid-cols-2 print:grid-cols-1">
         <ChartCard title="Vendas Mensais" subtitle={`Receita e pedidos — ${CURRENT_YEAR}`}>
           <MonthlySalesChart data={monthly} loading={loading} />
         </ChartCard>
