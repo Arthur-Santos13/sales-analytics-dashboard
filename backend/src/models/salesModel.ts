@@ -1,5 +1,130 @@
 import { query } from "../config/database";
 
+// ─── Orders ───────────────────────────────────────────────────────────────────
+
+export type OrderStatus = "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
+
+export interface OrderListItem {
+  id: string;
+  created_at: string;
+  customer_name: string;
+  customer_email: string;
+  region: string;
+  status: OrderStatus;
+  total_amount: number;
+  items_count: number;
+}
+
+export interface OrderItemDetail {
+  product_name: string;
+  category: string;
+  quantity: number;
+  unit_price: number;
+  subtotal: number;
+}
+
+export interface OrderDetail extends OrderListItem {
+  items: OrderItemDetail[];
+}
+
+export interface OrdersStats {
+  total: number;
+  pending: number;
+  confirmed: number;
+  shipped: number;
+  delivered: number;
+  cancelled: number;
+  total_revenue: number;
+}
+
+export async function getOrdersList(): Promise<OrderListItem[]> {
+  const result = await query<OrderListItem>(`
+    SELECT
+      o.id,
+      o.created_at,
+      c.name  AS customer_name,
+      c.email AS customer_email,
+      o.region,
+      o.status,
+      o.total_amount,
+      COUNT(oi.id)::int AS items_count
+    FROM orders o
+    JOIN customers c ON c.id = o.customer_id
+    LEFT JOIN order_items oi ON oi.order_id = o.id
+    GROUP BY o.id, c.name, c.email, o.region, o.status, o.total_amount, o.created_at
+    ORDER BY o.created_at DESC
+  `);
+  return result.rows;
+}
+
+export async function getOrderById(id: string): Promise<OrderDetail | null> {
+  const orderResult = await query<OrderListItem>(
+    `SELECT
+       o.id,
+       o.created_at,
+       c.name  AS customer_name,
+       c.email AS customer_email,
+       o.region,
+       o.status,
+       o.total_amount,
+       COUNT(oi.id)::int AS items_count
+     FROM orders o
+     JOIN customers c ON c.id = o.customer_id
+     LEFT JOIN order_items oi ON oi.order_id = o.id
+     WHERE o.id = $1
+     GROUP BY o.id, c.name, c.email, o.region, o.status, o.total_amount, o.created_at`,
+    [id]
+  );
+  if (!orderResult.rows[0]) return null;
+
+  const itemsResult = await query<OrderItemDetail>(
+    `SELECT
+       p.name    AS product_name,
+       p.category,
+       oi.quantity,
+       oi.unit_price,
+       (oi.quantity * oi.unit_price)::numeric AS subtotal
+     FROM order_items oi
+     JOIN products p ON p.id = oi.product_id
+     WHERE oi.order_id = $1
+     ORDER BY p.name`,
+    [id]
+  );
+
+  return { ...orderResult.rows[0], items: itemsResult.rows };
+}
+
+export async function updateOrderStatus(
+  id: string,
+  status: OrderStatus
+): Promise<OrderListItem | null> {
+  const result = await query<OrderListItem>(
+    `UPDATE orders
+     SET status = $1, updated_at = NOW()
+     WHERE id = $2
+     RETURNING id, status`,
+    [status, id]
+  );
+  return result.rows[0] ?? null;
+}
+
+export async function getOrdersStats(): Promise<OrdersStats> {
+  const result = await query<OrdersStats>(`
+    SELECT
+      COUNT(*)::int                                          AS total,
+      COUNT(*) FILTER (WHERE status = 'pending')::int       AS pending,
+      COUNT(*) FILTER (WHERE status = 'confirmed')::int     AS confirmed,
+      COUNT(*) FILTER (WHERE status = 'shipped')::int       AS shipped,
+      COUNT(*) FILTER (WHERE status = 'delivered')::int     AS delivered,
+      COUNT(*) FILTER (WHERE status = 'cancelled')::int     AS cancelled,
+      COALESCE(SUM(total_amount), 0)::numeric               AS total_revenue
+    FROM orders
+  `);
+  return result.rows[0];
+}
+
+// ─── Sales summary (existing) ─────────────────────────────────────────────────
+
 export interface SalesSummary {
   total_revenue: number;
   total_orders: number;

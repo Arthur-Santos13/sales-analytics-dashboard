@@ -45,3 +45,40 @@ export interface ProductInput {
   price: number;
   quantity: number;
 }
+
+// ─── Orders ───────────────────────────────────────────────────────────────────
+
+export type OrderStatus = "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
+
+export interface OrderListItem {
+  id: string;
+  created_at: string;
+  customer_name: string;
+  customer_email: string;
+  region: string;
+  status: OrderStatus;
+  total_amount: number;
+  items_count: number;
+}
+
+export interface OrderItemDetail {
+  product_name: string;
+  category: string;
+  quantity: number;
+  unit_price: number;
+  subtotal: number;
+}
+
+export interface OrderDetail extends OrderListItem {
+  items: OrderItemDetail[];
+}
+
+export interface OrdersStats {
+  total: number;
+  pending: number;
+  confirmed: number;
+  shipped: number;
+  delivered: number;
+  cancelled: number;
+  total_revenue: number;
+}

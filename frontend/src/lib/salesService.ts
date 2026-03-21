@@ -1,5 +1,9 @@
 import { api } from "./api";
-import type { SalesSummary, MonthlySale, CategorySale, TopProduct, RegionSale, ProductItem, ProductInput } from "@/types/sales";
+import type {
+  SalesSummary, MonthlySale, CategorySale, TopProduct, RegionSale,
+  ProductItem, ProductInput,
+  OrderListItem, OrderDetail, OrdersStats, OrderStatus,
+} from "@/types/sales";
 
 export async function getSalesSummary(year?: number): Promise<SalesSummary> {
   const params = year ? { year } : {};
@@ -66,4 +70,25 @@ export async function updateProduct(id: string, input: ProductInput): Promise<Pr
 
 export async function deleteProduct(id: string): Promise<void> {
   await api.delete(`/sales/products/${id}`);
+}
+
+// ─── Orders ───────────────────────────────────────────────────────────────────
+
+export async function getOrdersStats(): Promise<OrdersStats> {
+  const { data } = await api.get<{ status: string; data: OrdersStats }>("/orders/stats");
+  return data.data;
+}
+
+export async function getOrdersList(): Promise<OrderListItem[]> {
+  const { data } = await api.get<{ status: string; data: OrderListItem[] }>("/orders");
+  return data.data;
+}
+
+export async function getOrderById(id: string): Promise<OrderDetail> {
+  const { data } = await api.get<{ status: string; data: OrderDetail }>(`/orders/${id}`);
+  return data.data;
+}
+
+export async function updateOrderStatus(id: string, status: OrderStatus): Promise<void> {
+  await api.put(`/orders/${id}/status`, { status });
 }
