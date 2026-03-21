@@ -82,3 +82,22 @@ export interface OrdersStats {
   cancelled: number;
   total_revenue: number;
 }
+
+// ─── Customers ──────────────────────────────────────────────────────────────
+
+export interface CustomerListItem {
+  id: string;
+  name: string;
+  email: string;
+  created_at: string;
+  total_orders: number;
+  total_spent: number;
+  last_order_at: string | null;
+}
+
+export interface CustomersStats {
+  total: number;
+  new_this_month: number;
+  avg_orders_per_customer: number;
+  avg_spent_per_customer: number;
+}

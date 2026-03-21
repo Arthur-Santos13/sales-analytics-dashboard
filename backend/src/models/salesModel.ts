@@ -123,6 +123,63 @@ export async function getOrdersStats(): Promise<OrdersStats> {
   return result.rows[0];
 }
 
+// ─── Customers ───────────────────────────────────────────────────────────────
+
+export interface CustomerListItem {
+  id: string;
+  name: string;
+  email: string;
+  created_at: string;
+  total_orders: number;
+  total_spent: number;
+  last_order_at: string | null;
+}
+
+export interface CustomersStats {
+  total: number;
+  new_this_month: number;
+  avg_orders_per_customer: number;
+  avg_spent_per_customer: number;
+}
+
+export async function getCustomersList(): Promise<CustomerListItem[]> {
+  const result = await query<CustomerListItem>(`
+    SELECT
+      c.id,
+      c.name,
+      c.email,
+      c.created_at,
+      COUNT(o.id)::int                          AS total_orders,
+      COALESCE(SUM(o.total_amount), 0)::numeric AS total_spent,
+      MAX(o.created_at)                         AS last_order_at
+    FROM customers c
+    LEFT JOIN orders o ON o.customer_id = c.id
+    GROUP BY c.id, c.name, c.email, c.created_at
+    ORDER BY total_spent DESC
+  `);
+  return result.rows;
+}
+
+export async function getCustomersStats(): Promise<CustomersStats> {
+  const result = await query<CustomersStats>(`
+    SELECT
+      COUNT(DISTINCT c.id)::int                                       AS total,
+      COUNT(DISTINCT c.id) FILTER (
+        WHERE EXTRACT(YEAR  FROM c.created_at) = EXTRACT(YEAR  FROM NOW())
+          AND EXTRACT(MONTH FROM c.created_at) = EXTRACT(MONTH FROM NOW())
+      )::int                                                          AS new_this_month,
+      ROUND(
+        COALESCE(COUNT(o.id)::numeric / NULLIF(COUNT(DISTINCT c.id), 0), 0), 1
+      )                                                               AS avg_orders_per_customer,
+      ROUND(
+        COALESCE(SUM(o.total_amount) / NULLIF(COUNT(DISTINCT c.id), 0), 0), 2
+      )                                                               AS avg_spent_per_customer
+    FROM customers c
+    LEFT JOIN orders o ON o.customer_id = c.id
+  `);
+  return result.rows[0];
+}
+
 // ─── Sales summary (existing) ─────────────────────────────────────────────────
 
 export interface SalesSummary {

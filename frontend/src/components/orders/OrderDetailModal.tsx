@@ -113,7 +113,7 @@ export function OrderDetailModal({ orderId, onClose, onStatusChanged }: Props) {
               {/* Meta grid */}
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {[
-                  { icon: Hash,     label: "ID",       value: order.id.slice(0, 8) + "…" },
+                  { icon: Hash,     label: "ID",       value: "#" + order.id.split("-").pop() },
                   { icon: Calendar, label: "Data",     value: new Date(order.created_at).toLocaleDateString("pt-BR") },
                   { icon: User,     label: "Cliente",  value: order.customer_name },
                   { icon: MapPin,   label: "Região",   value: order.region },
