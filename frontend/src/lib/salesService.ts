@@ -3,6 +3,7 @@ import type {
   SalesSummary, MonthlySale, CategorySale, TopProduct, RegionSale,
   ProductItem, ProductInput,
   OrderListItem, OrderDetail, OrdersStats, OrderStatus,
+  CustomerListItem, CustomersStats,
 } from "@/types/sales";
 
 export async function getSalesSummary(year?: number): Promise<SalesSummary> {
@@ -91,4 +92,16 @@ export async function getOrderById(id: string): Promise<OrderDetail> {
 
 export async function updateOrderStatus(id: string, status: OrderStatus): Promise<void> {
   await api.put(`/orders/${id}/status`, { status });
+}
+
+// ─── Customers ───────────────────────────────────────────────────────────────
+
+export async function getCustomersStats(): Promise<CustomersStats> {
+  const { data } = await api.get<{ status: string; data: CustomersStats }>("/customers/stats");
+  return data.data;
+}
+
+export async function getCustomersList(): Promise<CustomerListItem[]> {
+  const { data } = await api.get<{ status: string; data: CustomerListItem[] }>("/customers");
+  return data.data;
 }

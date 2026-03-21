@@ -239,7 +239,7 @@ export default function OrdersPage() {
                   {new Date(order.created_at).toLocaleDateString("pt-BR")}
                 </span>
                 <span className="text-xs font-mono" style={{ color: "var(--text-muted)" }}>
-                  #{order.id.slice(-8)}
+                  #{order.id.split("-").pop()}
                 </span>
               </div>
               {/* Customer */}
