@@ -4,25 +4,8 @@ import { useEffect, useState } from "react";
 import { X, User, MapPin, Hash, Calendar } from "lucide-react";
 import { getOrderById, updateOrderStatus } from "@/lib/salesService";
 import { formatCurrency, formatNumber } from "@/lib/format";
+import { STATUS_LABELS, STATUS_COLORS, ALL_STATUSES } from "@/lib/orderStatus";
 import type { OrderDetail, OrderStatus } from "@/types/sales";
-
-const STATUS_LABELS: Record<OrderStatus, string> = {
-  pending:   "Pendente",
-  confirmed: "Confirmado",
-  shipped:   "Enviado",
-  delivered: "Entregue",
-  cancelled: "Cancelado",
-};
-
-const STATUS_COLORS: Record<OrderStatus, { bg: string; color: string; border: string }> = {
-  pending:   { bg: "#f59e0b22", color: "#f59e0b", border: "#f59e0b44" },
-  confirmed: { bg: "#00b4d822", color: "#00b4d8", border: "#00b4d844" },
-  shipped:   { bg: "#8b5cf622", color: "#8b5cf6", border: "#8b5cf644" },
-  delivered: { bg: "#22c55e22", color: "#22c55e", border: "#22c55e44" },
-  cancelled: { bg: "#ef444422", color: "#ef4444", border: "#ef444444" },
-};
-
-const ALL_STATUSES: OrderStatus[] = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
 
 interface Props {
   orderId: string;
@@ -31,10 +14,10 @@ interface Props {
 }
 
 export function OrderDetailModal({ orderId, onClose, onStatusChanged }: Props) {
-  const [order, setOrder]       = useState<OrderDetail | null>(null);
-  const [loading, setLoading]   = useState(true);
+  const [order, setOrder] = useState<OrderDetail | null>(null);
+  const [loading, setLoading] = useState(true);
   const [newStatus, setNewStatus] = useState<OrderStatus | "">("");
-  const [saving, setSaving]     = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     getOrderById(orderId)
@@ -113,10 +96,10 @@ export function OrderDetailModal({ orderId, onClose, onStatusChanged }: Props) {
               {/* Meta grid */}
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {[
-                  { icon: Hash,     label: "ID",       value: "#" + order.id.split("-").pop() },
-                  { icon: Calendar, label: "Data",     value: new Date(order.created_at).toLocaleDateString("pt-BR") },
-                  { icon: User,     label: "Cliente",  value: order.customer_name },
-                  { icon: MapPin,   label: "Região",   value: order.region },
+                  { icon: Hash, label: "ID", value: "#" + order.id.split("-").pop() },
+                  { icon: Calendar, label: "Data", value: new Date(order.created_at).toLocaleDateString("pt-BR") },
+                  { icon: User, label: "Cliente", value: order.customer_name },
+                  { icon: MapPin, label: "Região", value: order.region },
                 ].map(({ icon: Icon, label, value }) => (
                   <div
                     key={label}

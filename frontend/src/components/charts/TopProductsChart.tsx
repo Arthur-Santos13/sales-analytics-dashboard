@@ -12,14 +12,12 @@ import {
 } from "recharts";
 import type { TopProduct } from "@/types/sales";
 import { formatCurrency } from "@/lib/format";
+import { CHART_COLORS } from "@/lib/chartColors";
 
 interface TopProductsChartProps {
   data: TopProduct[];
   loading?: boolean;
 }
-
-// Hex values — SVG fill/stroke does not resolve CSS variables
-const CHART_COLORS = ["#00b4d8", "#0077b6", "#48cae4", "#90e0ef", "#caf0f8"];
 
 function CustomTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null;
