@@ -52,7 +52,11 @@ sales-analytics-dashboard/
 │       │   ├── products/             # ProductModal
 │       │   └── ui/                   # KpiCard, ChartCard, ComingSoon
 │       ├── lib/
-│       │   └── salesService.ts       # Funções de chamada à API
+│       │   ├── api.ts                # Cliente HTTP base
+│       │   ├── format.ts             # Utilitários de formatação (moeda, número)
+│       │   ├── salesService.ts       # Funções de chamada à API
+│       │   ├── orderStatus.ts        # Labels, cores e lista de status de pedidos
+│       │   └── chartColors.ts        # Paleta de cores dos gráficos
 │       └── types/
 │           └── sales.ts              # Interfaces TypeScript de todos os módulos
 │
@@ -60,7 +64,7 @@ sales-analytics-dashboard/
 │   └── src/
 │       ├── controllers/              # salesController, ordersController, customersController
 │       ├── routes/                   # salesRoutes, ordersRoutes, customersRoutes
-│       ├── models/                   # salesModel, ordersModel, customersModel
+│       ├── models/                   # salesModel (queries SQL de todos os módulos)
 │       ├── middleware/               # Tratamento de erros, validação
 │       ├── config/                   # Configuração do banco de dados
 │       └── utils/                    # Logger

@@ -15,25 +15,8 @@ import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { OrderDetailModal } from "@/components/orders/OrderDetailModal";
 import { getOrdersList, getOrdersStats } from "@/lib/salesService";
 import { formatCurrency, formatNumber } from "@/lib/format";
+import { STATUS_LABELS, STATUS_COLORS, ALL_STATUSES } from "@/lib/orderStatus";
 import type { OrderListItem, OrderStatus, OrdersStats } from "@/types/sales";
-
-const STATUS_LABELS: Record<OrderStatus, string> = {
-  pending:   "Pendente",
-  confirmed: "Confirmado",
-  shipped:   "Enviado",
-  delivered: "Entregue",
-  cancelled: "Cancelado",
-};
-
-const STATUS_COLORS: Record<OrderStatus, { bg: string; color: string; border: string }> = {
-  pending:   { bg: "#f59e0b22", color: "#f59e0b", border: "#f59e0b44" },
-  confirmed: { bg: "#00b4d822", color: "#00b4d8", border: "#00b4d844" },
-  shipped:   { bg: "#8b5cf622", color: "#8b5cf6", border: "#8b5cf644" },
-  delivered: { bg: "#22c55e22", color: "#22c55e", border: "#22c55e44" },
-  cancelled: { bg: "#ef444422", color: "#ef4444", border: "#ef444444" },
-};
-
-const ALL_STATUSES: OrderStatus[] = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
 
 const KPI_CONFIG: {
   key: keyof OrdersStats;
@@ -41,13 +24,13 @@ const KPI_CONFIG: {
   icon: React.ElementType;
   color: string;
 }[] = [
-  { key: "total",     label: "Total de Pedidos", icon: ShoppingCart, color: "#00b4d8" },
-  { key: "pending",   label: "Pendentes",        icon: Clock,        color: "#f59e0b" },
-  { key: "shipped",   label: "Enviados",         icon: Truck,        color: "#8b5cf6" },
-  { key: "delivered", label: "Entregues",        icon: PackageCheck, color: "#22c55e" },
-  { key: "confirmed", label: "Confirmados",      icon: CheckCircle2, color: "#48cae4" },
-  { key: "cancelled", label: "Cancelados",       icon: XCircle,      color: "#ef4444" },
-];
+    { key: "total", label: "Total de Pedidos", icon: ShoppingCart, color: "#00b4d8" },
+    { key: "pending", label: "Pendentes", icon: Clock, color: "#f59e0b" },
+    { key: "shipped", label: "Enviados", icon: Truck, color: "#8b5cf6" },
+    { key: "delivered", label: "Entregues", icon: PackageCheck, color: "#22c55e" },
+    { key: "confirmed", label: "Confirmados", icon: CheckCircle2, color: "#48cae4" },
+    { key: "cancelled", label: "Cancelados", icon: XCircle, color: "#ef4444" },
+  ];
 
 const PAGE_SIZE = 20;
 
@@ -64,13 +47,13 @@ function StatusBadge({ status }: { status: OrderStatus }) {
 }
 
 export default function OrdersPage() {
-  const [orders, setOrders]   = useState<OrderListItem[]>([]);
-  const [stats, setStats]     = useState<OrdersStats | null>(null);
+  const [orders, setOrders] = useState<OrderListItem[]>([]);
+  const [stats, setStats] = useState<OrdersStats | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [search, setSearch]   = useState("");
-  const [status, setStatus]   = useState<OrderStatus | "">("");
-  const [page, setPage]       = useState(1);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState<OrderStatus | "">("");
+  const [page, setPage] = useState(1);
 
   const [detailId, setDetailId] = useState<string | null>(null);
 
@@ -92,7 +75,7 @@ export default function OrdersPage() {
   }, [orders, search, status]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated  = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   function onFilterChange(val: string) {
     setStatus(val as OrderStatus | "");

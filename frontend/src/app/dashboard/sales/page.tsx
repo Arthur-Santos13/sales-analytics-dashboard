@@ -34,9 +34,10 @@ import type {
   RegionSale,
 } from "@/types/sales";
 
+import { CHART_COLORS } from "@/lib/chartColors";
+
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = [CURRENT_YEAR - 2, CURRENT_YEAR - 1, CURRENT_YEAR];
-const CHART_COLORS = ["#00b4d8", "#0077b6", "#48cae4", "#90e0ef", "#caf0f8"];
 
 function KpiSkeleton() {
   return (
@@ -131,10 +132,10 @@ export default function SalesPage() {
               year === y
                 ? { background: "#00b4d8", color: "#fff" }
                 : {
-                    background: "var(--bg-surface-2)",
-                    color: "var(--text-secondary)",
-                    border: "1px solid var(--border)",
-                  }
+                  background: "var(--bg-surface-2)",
+                  color: "var(--text-secondary)",
+                  border: "1px solid var(--border)",
+                }
             }
           >
             {y}

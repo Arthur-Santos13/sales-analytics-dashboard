@@ -9,14 +9,12 @@ import {
 } from "recharts";
 import type { CategorySale } from "@/types/sales";
 import { formatCurrency } from "@/lib/format";
+import { CHART_COLORS } from "@/lib/chartColors";
 
 interface SalesByCategoryChartProps {
   data: CategorySale[];
   loading?: boolean;
 }
-
-// Hex values — SVG fill does not resolve CSS variables
-const CHART_COLORS = ["#00b4d8", "#0077b6", "#48cae4", "#90e0ef", "#caf0f8"];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function CustomTooltip({ active, payload }: any) {
@@ -26,14 +24,14 @@ function CustomTooltip({ active, payload }: any) {
     <div
       className="rounded-lg px-3 py-2 text-xs shadow-lg"
       style={{
-        background: "#1a3560",
-        border: "1px solid #00b4d8",
-        color: "#e8f0fe",
+        background: "var(--bg-overlay)",
+        border: "1px solid var(--border-accent)",
+        color: "var(--text-primary)",
       }}
     >
       <p className="mb-1 font-semibold" style={{ color: payload[0].fill }}>{d.category}</p>
       <p>Receita: <span className="font-bold">{formatCurrency(Number(d.revenue))}</span></p>
-      <p style={{ color: "#8eafd4" }}>Participação: <span className="font-bold">{Number(d.percentage).toFixed(1)}%</span></p>
+      <p style={{ color: "var(--text-muted)" }}>Participação: <span className="font-bold">{Number(d.percentage).toFixed(1)}%</span></p>
     </div>
   );
 }
@@ -41,7 +39,7 @@ function CustomTooltip({ active, payload }: any) {
 export function SalesByCategoryChart({ data, loading }: SalesByCategoryChartProps) {
   if (loading) {
     return (
-      <div className="h-64 w-full animate-pulse rounded-lg" style={{ background: "#112447" }} />
+      <div className="h-64 w-full animate-pulse rounded-lg" style={{ background: "var(--bg-surface-2)" }} />
     );
   }
 
